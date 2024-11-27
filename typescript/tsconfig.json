@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+      "rootDir": "./",
+      "outDir": "../public/javascript/",
+      "target": "es2018"
+  }
+}
