@@ -1,5 +1,5 @@
 /* Reset básico */
-body, h1, ul, li, input, button {
+body, h1, h3, ul, li, input, button {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -30,6 +30,70 @@ h1 {
     text-align: center;
     margin-bottom: 20px;
     color: #444;
+}
+
+h3 {
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 16px;
+    color: #444;
+}
+
+.hide {
+    display: none;
+}
+
+.show {
+    display: inline;
+ }
+
+ .logout-button button {
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+ }
+
+.login-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+.login-input input {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-right: 10px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.login-input input:focus {
+    border-color: #007bff;
+}
+
+.login-input button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.login-input button:hover {
+    background-color: #0056b3;
 }
 
 .task-input {

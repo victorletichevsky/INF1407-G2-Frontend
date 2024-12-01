@@ -10,11 +10,27 @@
 <body>
     <div class="container">
         <h1>ToDo List</h1>
-        <div class="task-input">
-            <input type="text" id="new-task" placeholder="Add a new task">
-            <button id="add-task">Add</button>
+        <h3><div id="nome_user">user</div></h3>
+
+        <div id="unlogged" class="show">
+            <div class="login-input">
+                <input type="text" id="username" placeholder="Username"><br>
+                <input type="password" id="password" placeholder="Password"><br>
+                <button id="make-login">Sign-up / Login</button>
+            </div>
         </div>
-        <ul id="task-list"></ul>
+
+        <div id="logged" class="hide">
+            <div class="task-input">
+                <input type="text" id="new-task" placeholder="Add a new task">
+                <button id="add-task">Add</button>
+            </div>
+            <ul id="task-list"></ul>
+            <div class="logout-button"> 
+                <button id="make-logout">Logout</button>
+            </div>
+        </div>
+
     </div>
 </body>
 </html>
