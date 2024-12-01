@@ -7,7 +7,7 @@ function addTaskButtonListener() {
 
 function handleLogin() {
     const username = (document.getElementById('username')).value;
-	const password = (document.getElementById('password')).value;
+    const password = (document.getElementById('password')).value;
     fetch(backendAddress + 'auth/token', {
         method: 'POST',
         body: JSON.stringify({
@@ -17,25 +17,25 @@ function handleLogin() {
         headers: {
             'Content-Type': 'application/json'
         }
-	})
-	.then((response) => {
-		if(response.ok) {
-			return response.json();
-		} else {
-			if(response.status == 401) {
+    })
+    .then((response) => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            if (response.status == 401) {
                 alert('Usuário ou senha inválidos.');
-			}
-			throw new Error('Falha na autenticação');
-		}
-	})
-	.then((data) => {
+            }
+            throw new Error('Falha na autenticação');
+        }
+    })
+    .then((data) => {
         const token = data.token;
         localStorage.setItem('token', token);
         window.location.replace('index.html');
     })
-	.catch(erro => { 
-        console.log(erro)
-    })
+    .catch(erro => { 
+        console.log(erro);
+    });
 }
 
 function handleLogout() {
@@ -43,44 +43,42 @@ function handleLogout() {
     fetch(backendAddress + 'auth/token', {
         method: 'DELETE',
         headers: {
-            'Authorization': token,
+            'Authorization': `Token ${token}`,
             'Content-Type': 'application/json'
         }
     })
     .then(response => {
-        if(response.ok) window.location.replace('index.html');
+        if (response.ok) window.location.replace('index.html');
         else alert('Erro ' + response.status);
     })
-    .catch(erro => { console.log(erro); })
+    .catch(erro => { console.log(erro); });
 }
 
 function makeLoginLogoutButtonListener() {
-    console.log("listen");
     document.body.addEventListener('click', evento => {
-		evento.preventDefault();
-		if(evento.target.id == 'make-login') {
+        evento.preventDefault();
+        if (evento.target.id == 'make-login') {
             handleLogin();
         }
-        if(evento.target.id == 'make-logout') {
+        if (evento.target.id == 'make-logout') {
             handleLogout();
         }
-	});
+    });
 }
 
 function checkLogin() {
     window.addEventListener('load', () => {
         const token = localStorage.getItem('token');
-        // const token = 'fece423ca932c966c7935ad9c0f2b96684ca4b7f';
         fetch(backendAddress + 'auth/token', {
             method: 'GET',
             headers: {
-                'Authorization': token
+                'Authorization': `Token ${token}`
             }
         })
         .then(response => {
             response.json().then(data => {
                 const usuario = data;
-                if(response.ok) {
+                if (response.ok) {
                     let objDiv = (document.getElementById('logged'));
                     objDiv.classList.remove('hide');
                     objDiv.classList.add('show');
@@ -88,6 +86,7 @@ function checkLogin() {
                     objDiv.classList.remove('show');
                     objDiv.classList.add('hide');
                 } else {
+                    usuario.username = 'visitante';
                     let objDiv = (document.getElementById('unlogged'));
                     objDiv.classList.remove('hide');
                     objDiv.classList.add('show');
@@ -97,7 +96,7 @@ function checkLogin() {
                 }
                 const spanElement = document.getElementById('nome_user');
                 spanElement.innerHTML = 'Olá, ' + usuario.username + '!';
-            })
+            });
         })
         .catch(erro => {
             console.log('[setLoggedUser] deu erro: ' + erro);
@@ -106,16 +105,22 @@ function checkLogin() {
 }
 
 function loadTasks() {
-    fetch(backendAddress + 'tasks/')
-        .then(response => response.json())
-        .then(tasks => {
+    const token = localStorage.getItem('token');
+    fetch(backendAddress + 'tasks/', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Token ${token}`
+        }
+    })
+    .then(response => response.json())
+    .then(tasks => {
         const list = document.getElementById('task-list');
         list.innerHTML = '';
         tasks.forEach((task) => {
             renderTask(task);
         });
     })
-        .catch(error => {
+    .catch(error => {
         console.error('Erro ao carregar tarefas:', error);
     });
 }
@@ -149,41 +154,53 @@ function saveTask() {
         alert('A tarefa não pode estar vazia!');
         return;
     }
+    const token = localStorage.getItem('token');
     fetch(backendAddress + 'tasks/', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${token}`
+        },
         body: JSON.stringify(task),
     })
-        .then(() => {
+    .then(() => {
         input.value = '';
         loadTasks();
     })
-        .catch(error => {
+    .catch(error => {
         console.error('Erro ao salvar tarefa:', error);
     });
 }
 
 function toggleComplete(id, completed) {
+    const token = localStorage.getItem('token');
     fetch(`${backendAddress + 'tasks/'}${id}/`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${token}`
+        },
         body: JSON.stringify({ completed }),
     })
-        .then(() => loadTasks())
-        .catch(error => {
+    .then(() => loadTasks())
+    .catch(error => {
         console.error('Erro ao atualizar tarefa:', error);
     });
 }
 
 function deleteTask(id) {
+    const token = localStorage.getItem('token');
     if (!confirm('Tem certeza de que deseja apagar esta tarefa?')) {
         return;
     }
     fetch(`${backendAddress + 'tasks/'}${id}/`, {
         method: 'DELETE',
+        headers: {
+            'Authorization': `Token ${token}`
+        }
     })
-        .then(() => loadTasks())
-        .catch(error => {
+    .then(() => loadTasks())
+    .catch(error => {
         console.error('Erro ao apagar tarefa:', error);
     });
 }
